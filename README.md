@@ -9,7 +9,7 @@ Issues:
 3. Plot Labels can be added
 4. Pie Chart lacking functionality (particularly regarding color change)
 5. Color selection missing in Boxplot
-6. The amount of possible selection in the Color Selection Window is only limited to 0% blue and 100% blue. The color canvases are designed using basic code automation with Java.
+6. The amount of possible selection in the Color Selection Window is only limited to 0% blue and 100% blue. The color canvases are designed using basic code automation with Java. The automation allows _most_ of the code to run, though a minute amount remains that needs to be manually added (thereby requiring the remainder of the canvas integration to be done manually).
 7. GreyScale color selection option missing
 
 And much more.
