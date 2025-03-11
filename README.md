@@ -14,4 +14,4 @@ Issues:
 
 And much more.
 
-# Note that there is only one developer; changes take time.
+# Note that there is only one developer: changes take time.
