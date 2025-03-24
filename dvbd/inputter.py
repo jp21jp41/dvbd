@@ -104,9 +104,29 @@ class adv_inputters:
             resulting_text = init_input
             print(resulting_text + " was ran")
         if readtype == "file":
+            if ".csv" in resulting_text:
+                try:
+                    self.data = pnd.read_csv(resulting_text, sep = ",")
+                except:
+                    try:
+                        self.data = pnd.read_csv(resulting_text, sep = " ")
+                    except:
+                        try:
+                            self.data = pnd.read_csv(resulting_text, sep = ";")
+                        except:
+                            try:
+                                self.data = pnd.read_csv(resulting_text, sep = "\t")
+                            except:
+                                try:
+                                    self.data = pnd.read_csv(resulting_text, sep = "\r\t")
+                                except:
+                                    pass
             try:
-                data = pnd.read_csv(resulting_text)
-                return data
+                self.row_names = self.data[0]
+                try:
+                    self.current_column = self.data[1]
+                except:
+                    pass
             except:
                 if excel_skip == True:
                     class_quick_out("Error: File not read.")
@@ -127,8 +147,11 @@ class adv_inputters:
             try:
                 self.current_column = self.data[self.checker2[resulting_text]]
             except:
-                class_quick_out("Error: Column not found.")
-                self.basic_read(str_statement, "column", init_input)
+                try:
+                    self.current_column = self.data[resulting_text]
+                except:
+                    class_quick_out("Error: Column not found.")
+                    self.basic_read(str_statement, "column", init_input)
         
     
     
@@ -138,7 +161,6 @@ class adv_inputters:
             z = 0
             for point in self.checker1:
                 if new_column_name in self.checker1[point]:
-                    print(new_column_name)
                     new_column_name += str(z)
                     z += 1
         except:
@@ -154,6 +176,8 @@ class adv_inputters:
     def excel_sheet_reader(self, file, incrementer = 0, checked_value = 0):
         try:
             data_sheet = pnd.read_excel(file, sheet_name = incrementer)
+            self.column_names.append(data_sheet.columns[0])
+            self.row_names = data_sheet[data_sheet.columns[0]]
         except:
             return
         try:
@@ -165,7 +189,6 @@ class adv_inputters:
                 checked_value += 1
         except:
             try:
-                print(incrementer)
                 self.data = []
                 for column_name in data_sheet:
                     self.data.append(data_sheet[column_name])
@@ -181,7 +204,10 @@ class adv_inputters:
         
     
 
-
+# Full exit function
+def full_exit():
+    print("Exited Program")
+    sys.exit()
 
         
 
