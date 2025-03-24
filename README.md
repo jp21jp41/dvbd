@@ -2,19 +2,32 @@
 Data Visualization Backend Designer (WIP)
 
 Backend Designer which takes a dataset directory, allows the user to select a column of data, and run plots based on the data.
+So far, said plots can be saved.
+Possible options:
+- Histogram
+- Bar Graph
+- Boxplot
+- Distribution
+- Pie (Pre-alpha, therefore not functional)
+- Table (Pre-alpha)
+- Extra (Pre-alpha)
+- Regression
 
-Issues:
+There are many problems inherently latent within such a vast system. These issues would have to be sorted through with time, with a heavy focus on providing sound logic throughout.
+
+Notable Issues:
 1. Directory Selection: could have directory in window instead of command-line, could have the ability to access file explorer.
 2. Column Selection: could have multiple based in tkinter window (as either command-line or option menu)
 3. Plot Labels can be added
 4. Pie Chart lacking functionality (particularly regarding color change)
 5. Color selection missing in Boxplot
-6. The amount of possible selection in the Color Selection Window is only limited to 0% blue and 100% blue. The color canvases are designed using basic code automation with Java. The automation allows _most_ of the code to run, though a minute amount remains that needs to be manually added (thereby requiring the remainder of the canvas integration to be done manually).
-7. GreyScale color selection option missing
-8. Cannot be automated per file/column
-9. No Exit/Restart button
+6. GreyScale color selection option missing
+7. Cannot be automated per file/column
+8. No Restart button
 
 And much more.
+The complexity of the backend designer may require switching to a compiled language (or using other means) to allow development to be performed with greater ease. At the minimum, further components may be created in a different language, as files can not only be saved, but immediately uploaded to a new or existing Word document, for example - such tasks 
+could be performed in Java or another compiled language.
 
 Basic Instructions:
 1. Run dvbd_init.
