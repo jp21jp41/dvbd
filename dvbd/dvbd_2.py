@@ -13,20 +13,15 @@ from matplotlib.figure import Figure
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from scipy import stats
+from tkinter.filedialog import askopenfilename
 
 # Modules "inputter", "color_frame", and "dig_ops" can be found on GitHub through jp21jp41
 import inputter
 from dig_ops import *
 from color_frame_init import color_frame, colorHolder
+from doc_frame_init import *
 
-def list_destroyer(list, spot = 0):
-        if spot >= len(list):
-            return
-        try:
-            list[spot].destroy()
-        except:
-            pass
-        list_destroyer(list, spot + 1)
+
 
 # figureProfile class works with graphical user interfaces that allow plots
 # to be added and changed.
@@ -34,15 +29,25 @@ class figureProfile:
     # initializer
     def __init__(self, data, row_names = ""):
         self.data = [data]
-        if not row_names.equals(""):
-            self.row_names = row_names
+        print(self.data[0])
+        try:
+            if not row_names.equals(""):
+                print('55')
+                self.row_names = row_names
+        except:
+            if row_names != "":
+                print('54')
+                self.row_names = row_names
         try:
             self.data_columns.append(data.name)
         except:
             try:
                 self.data_columns = data.name
             except:
-                self.data_columns = data.columns
+                try:
+                    self.data_columns = data.columns
+                except:
+                    pass
         self.forget_choices = False
         self.horiz = False
         self.filler = 0
@@ -52,7 +57,7 @@ class figureProfile:
         self.color_options = ["Green", "Blue", "Red", "Other"]
         self.label = False
         self.base_canvas = False
-
+    
     def quickColorMenu(self, text, holder, x_value, y_value):
         choice = tk.StringVar(self.frame)
         choice.set(text)
@@ -112,7 +117,7 @@ class figureProfile:
             pass
         else:
             try:
-                list_destroyer(self.base_asset_list)
+                inputter.list_destroyer(self.base_asset_list)
             except:
                 pass
             # Add a flip axis button
@@ -123,6 +128,9 @@ class figureProfile:
             save_button = tk.Button(self.frame, text = "Save Figure", 
                                     command = lambda : self.save())
             save_button.place(x = 600, y = 30)
+            upload_options = tk.Button(self.frame, text = "Upload Options",
+                                       command = lambda : doc_frame(self))
+            upload_options.place(x = 600, y = 100)
             # Add a button to add label axes
             label_button = tk.Button(self.frame, text = "Label (Pre-alpha)",
                                      command = lambda : self.toggle_label())
@@ -140,7 +148,7 @@ class figureProfile:
             bg_menu = tk.OptionMenu(self.frame, bg_color_choice,
                                        *self.color_options, command = lambda x : self.basic_color(x, self.bg_holder))
             bg_menu.place(x = 700, y = 60)
-            self.base_asset_list = flip_button, save_button, label_button, color_menu, bg_menu
+            self.base_asset_list = flip_button, save_button, upload_options, label_button, color_menu, bg_menu
             self.base_canvas = True
         # Destroy current matplotlib integrated canvas widget if there was one
         try:
@@ -191,7 +199,7 @@ class figureProfile:
         
     # function to save plot with incrementer to store different figures
     def save(self):
-        self.initial_img.savefig(os.getcwd() + str(self.filler))
+        self.initial_img.savefig(os.getcwd() + "\\" + str(self.filler))
         self.filler += 1
     
     # function to plot onto the GUI
@@ -216,6 +224,7 @@ class figureProfile:
             same = False
         # Histogram case
         if self.plot_type == "Histogram":
+            print(self.data)
             # Histogram counts and bins
             hist_counts, hist_bins = np.histogram(self.data[0])
             # Matplotlib stairs
@@ -262,6 +271,7 @@ class figureProfile:
             self.choice_menu_set(0, "", same)
         # Pie chart (minimally functional)
         elif self.plot_type == "Pie (Pre-alpha)":
+            """
             sys.setrecursionlimit((len(self.data[0]) + 20)*100)
             coords = [(0.5, 0.5)]
             sum = 0
@@ -270,6 +280,8 @@ class figureProfile:
             pie = CoordCircle(coords, sum)
             pie.coord_circle(self.data[0], self.ax, self.init_holder.color)
             sys.setrecursionlimit(1000)
+            """
+            self.ax.pie(self.data[0], colors = [hex_to_rgba(self.color) for x in self.data[0]])
         elif self.plot_type == "Table (Pre-alpha)":
             self.ax.table(pnd.DataFrame(self.data[0]))
         elif self.plot_type == "Regression":
@@ -292,20 +304,19 @@ class figureProfile:
                 line_color_menu = self.quickColorMenu("Select Line Color", self.line_holder, 750, 60)
                 self.reg_plots = True
                 
-                self.base_asset_list[4].place(x = 600, y = 120)
+                self.base_asset_list[4].destroy()
+                self.base_asset_list[5].destroy()
                 self.base_asset_list[0].place_forget()
-                self.basic_plot_assets = [dot_color_menu, line_color_menu]
+                self.basic_plot_assets = dot_color_menu, line_color_menu
                 self.base_canvas = False
-                print('460')
             except:
-                print('400')
                 self.dot_holder = colorHolder('b')
                 self.line_holder = colorHolder('r')
                 self.basic_plot(plot_type)
                 
         elif self.plot_type == "Extra (Pre-alpha)": 
             patch_set = []
-            polygon = Polygon(np.random.rand(10, 2), closed=True) 
+            polygon = Polygon(np.random.rand(10, 2), closed=True)
             patch_set.append(polygon)
             p = PatchCollection(patch_set, alpha=0.4)
             self.ax.add_collection(p)
@@ -313,11 +324,16 @@ class figureProfile:
         
     
 # Run the backend designer
-def run(asker):
-    
-    # Function call to read a data file
-    asker.basic_read(str_statement = "Please enter the name" + 
-                            " of the file to use")
+def run(asker, fmt):
+    print("33")
+    if fmt == 0:
+        file_exp = tk.Tk()
+        directory = askopenfilename(initialdir = "/", title = "Select File")
+        asker.basic_read(init_input = directory, no_inputter = True)
+    if fmt == 1:
+        # Function call to read a data file
+        asker.basic_read(str_statement = "Please enter the name" + 
+                                " of the file to use")
     
     
     
@@ -330,7 +346,6 @@ def run(asker):
               str([x for x in asker.data]))
     asker.basic_read(str_statement = "Please select the column you" +
                             " seek to visualize data from.", readtype = "column")
-    
     
     # figureProfile Object
     figs_saved = figureProfile(asker.current_column, asker.row_names)
@@ -369,15 +384,13 @@ def mainloop(figure_profile, asker):
     sys.exit()
 
 
+"""
 # Initial asker object
 asker = inputter.adv_inputters()
 # Running backend designer
 x = run(asker)
 # Backend designer mainloop
 mainloop(x, asker)
+"""
 
-
-
-# Made with the help of various API reference pages such as those of
-# Matplotlib, Pandas, Numpy, and Tkinter
 

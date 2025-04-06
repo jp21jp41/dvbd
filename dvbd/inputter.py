@@ -4,7 +4,9 @@
 
 import sys
 import pandas as pnd
+import numpy as np
 import os
+from tkinter.filedialog import askopenfilename
 
 def inputter(opt = 'out'):
     ipt = input()
@@ -80,25 +82,33 @@ class adv_inputters:
     def basic_ask(self, question, choices = ['Yes', 'No'], 
             results = [0, 1], lister = 'options', 
             error = "You had not selected one of the choices " +
-            "listed."):
+            "listed.", choice_supplement = "", sep = "\t||"):
         print(question)
-        for choice in choices:
-            print(choice + "\t||")
+        for choice in np.arange(0, len(choices)):
+            print(choices[choice] + choice_supplement[choice] + sep)
         answer = inputter()
         try:
             result = results[choices.index(answer)]
             return result
         except:
-            class_quick_out()
-            self.basic_ask(question, choices, results, lister, error)
+            try:
+                result = results[choice_supplement.index(answer)]
+                return result
+            except:
+                try:
+                    result = results[choices + choice_supplement.index(answer)]
+                    return result
+                except:
+                    class_quick_out()
+                    self.basic_ask(question, choices, results, lister, error)
     
     def basic_read(self, str_statement = "Please enter the " + 
                           "directory of the data file you " +
                           "would like to use", readtype = "file",
                           init_input = '', no_inputter = False,
-                          excel_skip = False):
-        print(str_statement)
+                          excel_skip = False, gui = False):
         if not no_inputter:
+            print(str_statement)
             resulting_text = init_input + inputter()
         else:
             resulting_text = init_input
@@ -120,22 +130,46 @@ class adv_inputters:
                                 try:
                                     self.data = pnd.read_csv(resulting_text, sep = "\r\t")
                                 except:
-                                    pass
+                                    try:
+                                        self.data = pnd.read_csv(resulting_text)
+                                    except:
+                                        pass
             try:
                 self.row_names = self.data[0]
-                try:
-                    self.current_column = self.data[1]
-                except:
-                    pass
             except:
-                if excel_skip == True:
-                    class_quick_out("Error: File not read.")
-                    self.basic_read(str_statement, "file", init_input)
                 try:
-                    self.excel_sheet_reader(resulting_text)
+                    inc = 0
+                    for column in self.data.columns:
+                        self.checker2.update({inc : column})
+                        try:
+                            self.data_dict.update({column : self.data[column]})
+                        except:
+                            self.data_dict = {column : self.data[column]}
+                        inc += 1
+                    self.data = self.data_dict
+                    try:
+                        self.row_names = self.data[self.checker2[0]]
+                        self.current_column = self.data
+                    except:
+                        if gui == True:
+                            return
+                    try:
+                        self.current_column = self.data[1]
+                    except:
+                        pass
                 except:
-                    class_quick_out("Error: File not read.")
-                    self.basic_read(str_statement, "file", init_input)
+                    if excel_skip == True:
+                        if gui == True:
+                            return
+                        class_quick_out("Error: File not read.")
+                        self.basic_read(str_statement, "file", init_input)
+                    try:
+                        self.excel_sheet_reader(resulting_text)
+                    except:
+                        if gui == True:
+                            return
+                        class_quick_out("Error: File not read.")
+                        self.basic_read(str_statement, "file", init_input)
         if readtype == "dir":
             try:
                 os.chdir(resulting_text)
@@ -153,7 +187,6 @@ class adv_inputters:
                     class_quick_out("Error: Column not found.")
                     self.basic_read(str_statement, "column", init_input)
         
-    
     
     def checker_func(self, incrementer, column_name, checked_value):
         new_column_name = column_name
@@ -175,7 +208,7 @@ class adv_inputters:
     
     def excel_sheet_reader(self, file, incrementer = 0, checked_value = 0):
         try:
-            data_sheet = pnd.read_excel(file, sheet_name = incrementer)
+            data_sheet = pnd.read_excel(file, sheet_name = incrementer, engine = 'openpyxl')
             self.column_names.append(data_sheet.columns[0])
             self.row_names = data_sheet[data_sheet.columns[0]]
         except:
@@ -219,10 +252,26 @@ def class_quick_out(error = "Error found."):
     print(error)
     print("Type \"Exit\" if you would like to exit the" + 
           " program. To continue with the program, " +
-          "enter any other input." +
-          "(You may simply press \"Enter\".")
+          "enter any other input " +
+          "(You may simply press \"Enter\").")
     opt = input()
     if opt == "Exit":
         sys.exit()
 
-
+def file_browse(obj_type = "Return", item = "N/A"):
+    filepath = askopenfilename(initialdir = "/", title = "Select File")
+    if obj_type == "Return":
+        return(filepath)
+    elif obj_type == "Class Object":
+        item.directory = filepath
+    elif obj_type == "Print":
+        print(filepath)
+    
+def list_destroyer(list, spot = 0):
+        if spot >= len(list):
+            return
+        try:
+            list[spot].destroy()
+        except:
+            pass
+        list_destroyer(list, spot + 1)
