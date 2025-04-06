@@ -13,6 +13,9 @@ Possible options:
 - Extra (Pre-alpha)
 - Regression
 
+Currently, the backend designer can be initialized with both a command-line interface (in "cli_backend_init.py") and a graphical user interface (in "backend_init.py"), though only leading to Data Visualization ("dvbd_2.py") in either case.
+Imports as well as Word Document Uploads are beginning to be deployed through File Explorer (and not just directories). Other document upload options may be included, and currently, images need to be uploadable to already made Word Documents.
+
 There are many problems inherently latent within such a vast system. These issues would have to be sorted through with time, with a heavy focus on providing sound logic throughout.
 
 Notable Issues:
@@ -29,10 +32,10 @@ And much more.
 The complexity of the backend designer may require switching to a compiled language (or using other means) to allow development to be performed with greater ease. At the minimum, further components may be created in a different language, as files can not only be saved, but immediately uploaded to a new or existing Word document, for example - such tasks 
 could be performed in Java or another compiled language.
 
-Basic Instructions:
-1. Run dvbd_init.
-2. Enter your directory into the command line.
+Basic Instructions (Command-Line Interface):
+1. Run cli_backend_init.py.
+2. Choose between file selection through File Explorer or through entering a directory.
 3. Select the plot of your choice in Tkinter.
-4. Make your selections and save if you would like the figure saved.
+4. Make your selections and save or upload if you would like.
 
 # Note that there is only one developer: changes take time.
