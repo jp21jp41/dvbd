@@ -14,7 +14,7 @@ Possible options:
 - Regression
 
 Currently, the backend designer can be initialized with both a command-line interface (in "cli_backend_init.py") and a graphical user interface (in "backend_init.py"), though only leading to Data Visualization ("dvbd_2.py") in either case.
-Imports as well as Word Document Uploads are beginning to be deployed through File Explorer (and not just directories). Other document upload options may be included, and currently, images need to be uploadable to already made Word Documents.
+Imports as well as Word Document uploads are beginning to be deployed through File Explorer (and not just directories). Other document upload options may be included, and currently, images need to be uploadable to already made Word Documents.
 
 There are many problems inherently latent within such a vast system. These issues would have to be sorted through with time, with a heavy focus on providing sound logic throughout.
 
