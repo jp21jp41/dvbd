@@ -27,6 +27,7 @@ Notable Issues:
 6. GreyScale color selection option missing
 7. Cannot be automated per file/column
 8. No Restart button
+9. GUI backend initializer not fully functional (does not get to Data Visualization portion through file explorer, selects wrong columns, etc..)
 
 And much more.
 The complexity of the backend designer may require switching to a compiled language (or using other means) to allow development to be performed with greater ease. At the minimum, further components may be created in a different language, as files can not only be saved, but immediately uploaded to a new or existing Word document, for example - such tasks 
