@@ -1,1 +1,0 @@
-The 'output' folder includes results that can be created from the Data Visualization Backend Designer. Please observe the examples!
